@@ -1,0 +1,216 @@
+:root {
+    --verde-1: #D0E6B1;
+    --verde-2: #6D992F;
+
+    --azul-1: #B9E2F0;
+    --azul-2: #4A9DB5;
+
+    --vermelho-1: #E6B1B2;
+    --vermelho-2: #992728;
+
+    --laranja-1: #F0D5B9;
+    --laranja-2: #b46d3b;
+}
+
+* {
+    font-family: Lato;
+    box-sizing: border-box;
+}
+body {
+    background-color: #EFEFEF;
+}
+.header {
+    margin: 20px 0 20px 0;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.etapas {
+    border-radius: 25px;
+    margin-right: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.etapas p {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+.etapas .title-etapa {
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+.etapas .title-etapa .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* Etapa 1 (Laranja) */
+.etapas#etapa-1 {
+    background-color: var(--laranja-1);
+}
+.etapas#etapa-1 .title-etapa span {
+    color: var(--laranja-2);
+}
+.etapas#etapa-1 .title-etapa .circle {
+    background-color: var(--laranja-2);
+    color: var(--laranja-1);
+}
+
+/* Etapa 2 (Azul) */
+.etapas#etapa-2 {
+    background-color: var(--azul-1);
+}
+.etapas#etapa-2 .title-etapa span {
+    color: var(--azul-2);
+}
+.etapas#etapa-2 .title-etapa .circle {
+    background-color: var(--azul-2);
+    color: var(--azul-1);
+}
+.etapas#etapa-2 .btn-confirma {
+    color: var(--azul-2);
+    margin-bottom: 5px;
+}
+.etapas#etapa-2 .btn-confirma:hover {
+    background-color: var(--azul-2);
+    color: #FFFFFF;
+}
+.etapas#etapa-2 p {
+    text-align: center;
+}
+
+/* Etapa 3 (Vermelho) */
+.etapas#etapa-3 {
+    background-color: var(--vermelho-1);
+}
+.etapas#etapa-3 .title-etapa span {
+    color: var(--vermelho-2);
+}
+.etapas#etapa-3 .title-etapa .circle {
+    background-color: var(--vermelho-2);
+    color: var(--vermelho-1);
+}
+
+/* Etapa 4 (Verde) */
+.etapas#etapa-4 {
+    width: calc(75% + 45px);
+    background-color: var(--verde-1);
+    margin-top: 20px;
+    margin-right: 0px;
+    align-items: center;
+}
+.etapas#etapa-4 .title-etapa span {
+    color: var(--verde-2);
+}
+.etapas#etapa-4 .title-etapa .circle {
+    background-color: var(--verde-2);
+    color: var(--verde-1);
+}
+.etapas#etapa-4 .title-etapa {
+    justify-content: center;
+}
+.etapas#etapa-4 p {
+    width: 60%;
+    text-align: center;
+    margin-top: 10px;
+}
+.etapas#etapa-4 .btn-confirma {
+    width: 40%;
+    margin-top: 15px;
+    color: var(--verde-2);
+}
+.etapas#etapa-4 .btn-confirma:hover {
+    background-color: var(--verde-2);
+    color: #FFFFFF;
+}
+
+/* Botões genéricos */
+.etapas .btn-confirma {
+    background-color: #FFF;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 14px;
+    font-weight: bold;
+}
+.etapas#etapa-1 .btn-confirma {
+    color: var(--laranja-2);
+}
+.etapas#etapa-1 .btn-confirma:hover {
+    background-color: var(--laranja-2);
+    color: #FFFFFF;
+}
+
+/* Configurações */
+#configs {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+.box-input-number {
+    display: flex;
+    justify-content: center;
+    background-color: #FFF;
+    border-radius: 12px;
+    padding: 5px 5px 5px 5px;
+    width: 24%;
+    font-size: 14px;
+}
+.box-input-number label {
+    font-weight: bold;
+}
+.box-input-number input {
+    border: none;
+    width: 29px;
+    margin-left: 2px;
+}
+
+.drag-label {
+    cursor: col-resize;
+}
+
+/* Textarea */
+.etapas textarea {
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    padding: 8px;
+    font-size: 12px;
+}
+
+/* Preview */
+#preview {
+    width: calc(75% + 45px);
+    background-color: #FFF;
+    border-radius: 25px;
+    padding: 25px 20px;
+    margin-top: 20px;
+    margin-right: 0px;
+    font-family: Helvetica;
+}
+
+#footer {
+    width: calc(75% + 45px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    padding: 20px 0;
+}
+#footer p {
+    margin: 0;
+}

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Preview do Certificado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 30px auto; }
+        #painel { margin: 20px 0; display: flex; gap: 20px; align-items: center; }
+        canvas { border: 1px solid #ccc; max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+<h2>Pré-visualização do Certificado</h2>
+
+<p><strong>1)</strong> Primeiro, carregue a lista de alunos (.txt com nomes separados por vírgula).</p>
+<input type="file" id="arquivoTxt" accept=".txt" />
+<button onclick="carregarNomes()">Carregar Nomes</button>
+
+<p><strong>2)</strong> Visualize um nome no certificado e ajuste a posição.</p>
+<div id="painel">
+    <label>X: <input type="number" id="posX" value="400" step="5"></label>
+    <label>Y: <input type="number" id="posY" value="300" step="5"></label>
+    <label>Tamanho: <input type="number" id="fontSize" value="32" step="2"></label>
+    <select id="align">
+        <option value="center">Centralizado</option>
+        <option value="left">Esquerda</option>
+        <option value="right">Direita</option>
+    </select>
+    <button onclick="prevNome()">Próximo Nome</button>
+</div>
+
+<canvas id="certCanvas"></canvas>
+
+<div id="lista"></div>
+
+<button onclick="gerarPDFs()">Gerar PDFs</button>
+
+<script>
+    let nomes = [];
+    let indiceAtual = 0;
+    let imgFundo = new Image();
+
+    imgFundo.src = "certificado-base.png"; // seu modelo fixo
+    imgFundo.onload = () => desenhar();
+
+    async function carregarNomes() {
+        const arquivo = document.getElementById("arquivoTxt").files[0];
+        if (!arquivo) {
+            alert("Selecione um arquivo TXT.");
+            return;
+        }
+        const conteudo = await arquivo.text();
+        nomes = conteudo.split(",").map(n => n.trim()).filter(Boolean);
+        indiceAtual = 0;
+        desenhar();
+    }
+
+    function prevNome() {
+        if (nomes.length === 0) return;
+        indiceAtual = (indiceAtual + 1) % nomes.length;
+        desenhar();
+    }
+
+    let linhasPreview = []; // 🔹 array global para armazenar as linhas quebradas do preview
+
+
+
+
+    // função auxiliar para desenhar a linha com o nome em negrito
+    function desenharLinha(texto, ctx, x, y, nome, fontSize) {
+        const partes = texto.split(new RegExp(`(${nome})`, "gi"));
+
+        let offsetX = 0;
+        partes.forEach(parte => {
+            if (parte.toLowerCase() === nome.toLowerCase()) {
+                ctx.font = `bold ${fontSize}px helvetica`;
+            } else {
+                ctx.font = `${fontSize}px helvetica`;
+            }
+            ctx.fillText(parte, x + offsetX, y);
+            offsetX += ctx.measureText(parte).width;
+        });
+    }
+
+    async function gerarPDFs() {
+        if (nomes.length === 0) {
+            alert("Carregue primeiro o arquivo de nomes.");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+
+        const fontSizePreview = parseInt(document.getElementById("fontSize").value, 10);
+        const posX = parseInt(document.getElementById("posX").value, 10);
+        const posY = parseInt(document.getElementById("posY").value, 10);
+        const maxWidth = 900; // largura no preview
+
+        // dimensões do preview
+        const previewW = imgFundo.width;
+        const previewH = imgFundo.height;
+
+        for (const nome of nomes) {
+            const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+            const pageW = doc.internal.pageSize.getWidth();
+            const pageH = doc.internal.pageSize.getHeight();
+
+            // fundo
+            doc.addImage(imgFundo, "PNG", 0, 0, pageW, pageH);
+
+            // 🔹 converter coordenadas e tamanhos proporcionalmente
+            const xPDF = (posX / previewW) * pageW;
+            const yPDF = (posY / previewH) * pageH;
+            const maxWidthPDF = (maxWidth / previewW) * pageW;
+            const fontSizePDF = fontSizePreview * (pageH / previewH);
+            const lineHeight = fontSizePDF * 1.4;
+
+            // 🔹 texto para este aluno
+            const antes = "Certificamos que ";
+            const depois = " participou do treinamento em vendas, com duração de 12 horas, oferecido pela empresa Faustino.";
+            const texto = antes + nome + depois;
+
+            // 🔹 quebra em múltiplas linhas (igual ao preview)
+            const palavras = texto.split(" ");
+            let linhaAtual = "";
+            let y = yPDF;
+
+            for (let i = 0; i < palavras.length; i++) {
+                let teste = linhaAtual + palavras[i] + " ";
+                let largura = doc.getTextWidth(teste);
+
+                if (largura > maxWidthPDF && i > 0) {
+                    desenharLinhaPDF(linhaAtual.trim(), doc, xPDF, y, nome, fontSizePDF);
+                    linhaAtual = palavras[i] + " ";
+                    y += lineHeight;
+                } else {
+                    linhaAtual = teste;
+                }
+            }
+
+            if (linhaAtual) {
+                desenharLinhaPDF(linhaAtual.trim(), doc, xPDF, y, nome, fontSizePDF);
+            }
+
+            // 🔹 salvar com o nome do aluno
+            const safeName = nome.normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s.-]/g, "");
+            doc.save(`${safeName}.pdf`);
+        }
+    }
+
+
+
+
+
+
+    // função auxiliar para escrever a linha no PDF com o nome em bold
+    function desenharLinhaPDF(texto, doc, x, y, nome, fontSize) {
+        const partes = texto.split(new RegExp(`(${nome})`, "gi"));
+        let offsetX = 0;
+
+        partes.forEach(parte => {
+            if (parte.toLowerCase() === nome.toLowerCase()) {
+                doc.setFont("helvetica", "bold"); // ⚠️ jsPDF não usa Raleway nativamente
+                doc.setFontSize(fontSize);
+                doc.setTextColor(23, 86, 172); // azul do nome
+            } else {
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(fontSize);
+                doc.setTextColor(0, 0, 0); // preto
+            }
+            doc.text(parte, x + offsetX, y);
+            offsetX += doc.getTextWidth(parte + " ");
+        });
+    }
+
+    // redesenha quando inputs mudam
+    document.querySelectorAll("#posX,#posY,#fontSize,#align")
+        .forEach(el => el.addEventListener("input", desenhar));
+</script>
+</body>
+</html>

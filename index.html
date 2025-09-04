@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+  <head>
+      <meta charset="UTF-8">
+      <title>Gerador de Certificados</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="style/bootstrap.min.css">
+      <link rel="stylesheet" href="style/main.css">
+  </head>
+  <body>
+    <div class="container">
+        <div class="header">
+            <div class="row">
+                <h1 class="text-center">Gerador de Certificados</h1>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+                <div class="etapas col-3" id="etapa-1" class="col-4">
+                    <div class="title-etapa">
+                        <div class="circle">1</div>
+                        <span>Lista de nomes</span>
+                    </div>
+                    <p>
+                        Envie um arquivo .txt com os nomes separados por vírgula. Recomendamos até 50 nomes por vez; para listas maiores, divida em etapas.
+                    </p>
+                    <!-- input escondido -->
+                    <input type="file" id="arquivoTxt" accept=".txt" style="display:none;" />
+                    <button class="btn-confirma" id="btn-txt">Selecionar arquivo</button>
+                </div>
+                <div class="etapas col-3" id="etapa-2" class="col-4">
+                    <div class="title-etapa">
+                        <div class="circle">2</div>
+                        <span>Configurar arquivo</span>
+                    </div>
+                    <div id="configs">
+                        <div class="box-input-number">
+                            <label class="drag-label" for="x">X</label>
+                            <input type="text" id="x" class="drag-number" value="100">
+                        </div>
+
+                        <div class="box-input-number">
+                            <label class="drag-label" for="y">Y</label>
+                            <input type="text" id="y" class="drag-number" value="100">
+                        </div>
+
+                        <div class="box-input-number">
+                            <label class="drag-label" for="w">W</label>
+                            <input type="text" id="w" class="drag-number" value="100">
+                        </div>
+
+                        <div class="box-input-number">
+                            <label class="drag-label" for="t">T</label>
+                            <input type="text" id="t" class="drag-number" value="12">
+                        </div>
+                    </div>
+
+                    <input type="file" id="arquivoPng" accept=".png" style="display:none;" />
+                    <button class="btn-confirma" id="btn-png">Selecionar PNG <br> do certificado A4</button>
+
+                    <p>O arquivo deve estar em PNG no tamanho A4 obrigatoriamente</p>
+                </div>
+                <div class="etapas col-3" id="etapa-3">
+                    <div class="title-etapa">
+                        <div class="circle">3</div>
+                        <span>Texto do certificado</span>
+                    </div>
+                    <p>Digite abaixo o modelo do certificado. Use a letra X no lugar onde o nome do participante deve aparecer.</p>
+                    <textarea name="" id="modeloTexto" cols="30" rows="4" value="" placeholder="Certificamos que X participou do treinamento em vendas, com duração de 12 horas, oferecido pela empresa Faustino."></textarea>
+                </div>
+            </div>
+        <div class="row justify-content-center" id="preview">
+            <canvas id="a4"></canvas>
+        </div>
+        <div class="row justify-content-center etapas" id="etapa-4">
+            <div class="title-etapa">
+                <div class="circle">4</div>
+                <span>Gerar certificados</span>
+            </div>
+            <p>Após configurar o certificado e ajustar a posição do texto, clique para gerar. O sistema criará todos os PDFs da lista de nomes e exportará um único arquivo ZIP para download.</p>
+            <button class="btn-confirma" id="btnpdf">
+                Exportar os PDFs
+            </button>
+        </div>
+
+        <footer id="footer">
+            <p>Idealizado e desenvolvido por <strong>Lara Mel</strong></p>
+            <p><a href="https://www.laramel.com.br" target="_blank">www.laramel.com.br</a></p>
+        </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script/numeros-configs.js"></script>
+    <script src="script/btn-selecionar-arq.js"></script>
+    <script src="script/preview.js"></script>
+    <script src="script/gerarPdf.js"></script>
+  </body>
+</html>
