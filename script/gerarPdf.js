@@ -1,6 +1,14 @@
+// gerar-pdfs.js
+import { gerarCodigosUnicos } from "./id.js";
+
 document.getElementById("btnpdf").addEventListener("click", gerarPDFs);
 
 async function gerarPDFs() {
+
+    // um ID por certificado (seed opcional, ex.: nome do evento)
+    const codigos = await gerarCodigosUnicos(nomes.length, "certificados");
+
+
     if (!imgFundo || !imgFundo.src) {
         alert("Selecione o PNG do certificado antes de gerar.");
         return;
@@ -72,7 +80,10 @@ async function gerarPDFs() {
     // === NOVO: preparar o ZIP ===
     const zip = new JSZip();
 
-    for (const nome of nomes) {
+    for (let i = 0; i < nomes.length; i++) {
+        const nome = nomes[i];
+        const codigo = codigos[i];
+
         const doc = new jsPDF({
             unit: "px",
             format: [realWidth, realHeight],
@@ -80,10 +91,9 @@ async function gerarPDFs() {
             compress: true
         });
 
-        // fundo
+        // fundo + texto (tudo igual ao seu código atual)
         doc.addImage(imgFundo, "PNG", 0, 0, realWidth, realHeight);
 
-        // texto
         const texto = templateModelo.replace(/X/g, nome);
         const runs = buildRuns(texto, nome);
 
@@ -99,13 +109,19 @@ async function gerarPDFs() {
             color
         );
 
-        // nome limpo
+        // >>> desenhar ID no canto inferior esquerdo (preto, 10pt)
+        const margin = 24;                 // margem visual em px
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(40);               // 10pt conforme pedido
+        doc.setTextColor(0, 0, 0);         // preto
+        doc.text(`${codigo}`, margin, realHeight - margin);
+
+        // ZIP (como você já implementou)
         const safeName = nome
             .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             .replace(/[^\w\s.-]/g, "")
             .trim();
 
-        // === NOVO: em vez de salvar, colocar no ZIP ===
         const pdfBlob = doc.output("blob");
         zip.file(`certificado - ${safeName}.pdf`, pdfBlob);
     }
