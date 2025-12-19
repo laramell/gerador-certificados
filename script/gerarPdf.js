@@ -112,7 +112,7 @@ async function gerarPDFs() {
         // >>> desenhar ID no canto inferior esquerdo (preto, 10pt)
         const margin = 24;                 // margem visual em px
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(40);               // 10pt conforme pedido
+        doc.setFontSize(13);               // 10pt conforme pedido
         doc.setTextColor(0, 0, 0);         // preto
         doc.text(`${codigo}`, margin, realHeight - margin);
 
