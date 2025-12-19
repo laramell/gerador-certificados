@@ -75,7 +75,7 @@ async function gerarPDFs() {
     const lineHeightReal = (lhCanvas / scale) * LINE_HEIGHT_FACTOR;
 
     const landscape = realWidth >= realHeight ? "landscape" : "portrait";
-    const color = { r: 0, g: 0, b: 0 };
+    const color = { r: 255, g: 252, b: 240 };
 
     // === NOVO: preparar o ZIP ===
     const zip = new JSZip();
